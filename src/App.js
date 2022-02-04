@@ -10,18 +10,25 @@ function App() {
   const [newCollege,setNewCollege]=useState("");
   console.log("userCollectionRef :",usersCollectionRef);
  
-  const createUser=async()=>{
+  const createUser=async (e)=>{
+    e.preventDefault();
      await addDoc(usersCollectionRef,{name:newName,College:newCollege,Age:Number(newAge)});
      //Age:Number(newAge) is also available
+    window.location.reload(); 
+
   }
+
   const updateUser=async (id,Age)=>{
     const newFields={Age:Age+1};
     const userDoc=doc(db,"users",id); 
     await updateDoc(userDoc,newFields)
+    window.location.reload(); 
   }
   const deleteUser=async (id)=>{
     const userDoc=doc(db,"users",id); 
     await deleteDoc(userDoc); 
+    window.location.reload(); 
+
   }
   useEffect(()=>{
     const getUsers=async ()=>{
@@ -32,33 +39,29 @@ function App() {
     }
     getUsers();
   },[]);
- useEffect(()=>{
-
- },[createUser,updateUser,deleteUser]);
+ 
 
   return (
   <div className='App'>
         <div className='create-details'>
-        <input placeholder='Name' 
+        
+        <input required placeholder='Name' 
          onChange={(e)=>{
-           if(e.target.value!==null)
            setNewName(e.target.value);
           }}
         ></input>
-        <input placeholder='College'
+        <input required placeholder='College'
         onChange={(e)=>{
-          if(e.target.value!==null)
-          console.log("e.target.value",e.target.value);
           setNewCollege(e.target.value);
          }}
         ></input>
-        <input type="number"  placeholder='Age' 
+        <input required type="number"  placeholder='Age' 
          onChange={(e)=>{
-          if(e.target.value!==null)
           setNewAge(e.target.value);
          }}
         ></input>
-        <button onClick={createUser}>Create User</button>
+        <button type='Submit' onClick={(e)=>createUser(e)}>Create User</button>
+      
         {/* Here onClick={createUser is directly passed instead of onClick={()=>{createUser()}}}  because createUser has no arguments to be passed.
         Otherwise one has to put a function inside this onClick if the function takes arguments*/}
     </div>
